@@ -6,17 +6,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import './screens/list_screen.dart';
+
 class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Wasteagram',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Wasteagram'),
     );
   }
 }
@@ -62,33 +64,37 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-          child: image == null ? Text('no image selected') : Image.file(image)),
+      body: ListScreen(),
+      // body: Center(
+      //     child: Column(children: [
+      //   Center(
+      //       child:
+      //           image == null ? Text('no image selected') : Image.file(image)),
+      //   StreamBuilder(
+      //       stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+      //       builder: (context, record) {
+      //         if (record.hasData &&
+      //             record.data.docs != null &&
+      //             record.data.docs.length > 0) {
+      //           return ListView.builder(
+      //             itemCount: record.data.docs.length,
+      //             itemBuilder: (context, index) {
+      //               var post = record.data.docs[index];
+      //               return ListTile(
+      //                   leading: Text(post['imgUrl']),
+      //                   title: Text(post['numWasted'].toString()));
+      //             },
+      //           );
+      //         } else {
+      //           return Center(child: CircularProgressIndicator());
+      //         }
+      //       })
+      // ])),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
         tooltip: 'Pick Image',
         child: Icon(Icons.add_a_photo),
       ),
-      // body: StreamBuilder(
-      //     stream:
-      //         FirebaseFirestore.instance.collection('example').snapshots(),
-      //     builder: (context, record) {
-      //       if (record.hasData &&
-      //           record.data.docs != null &&
-      //           record.data.docs.length > 0) {
-      //         return ListView.builder(
-      //           itemCount: record.data.docs.length,
-      //           itemBuilder: (context, index) {
-      //             var post = record.data.docs[index];
-      //             return ListTile(
-      //                 leading: Text(post['name']),
-      //                 title: Text(post['weight'].toString()));
-      //           },
-      //         );
-      //       } else {
-      //         return Center(child: CircularProgressIndicator());
-      //       }
-      //     })
     );
   }
 }
