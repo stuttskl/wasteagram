@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import './screens/list_screen.dart';
+import './screens/details_screen.dart';
 
 class App extends StatelessWidget {
   // This widget is the root of your application.
@@ -60,11 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: ListScreen(),
+    var routes = {DetailsScreen.routeName: (context) => DetailsScreen()};
+    return MaterialApp(
+      routes: routes,
+      title: 'Wasteagram',
+      home: ListScreen(),
       // body: Center(
       //     child: Column(children: [
       //   Center(
@@ -90,11 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
       //         }
       //       })
       // ])),
-      floatingActionButton: FloatingActionButton(
-        onPressed: getImage,
-        tooltip: 'Pick Image',
-        child: Icon(Icons.add_a_photo),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: getImage,
+      //   tooltip: 'Pick Image',
+      //   child: Icon(Icons.add_a_photo),
+      // ),
     );
   }
 }
