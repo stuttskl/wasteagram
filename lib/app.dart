@@ -89,11 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
       //         }
       //       })
       // ])),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: getImage,
-      //   tooltip: 'Pick Image',
-      //   child: Icon(Icons.add_a_photo),
-      // ),
     );
   }
 }
