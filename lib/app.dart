@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import './screens/list_screen.dart';
 import './screens/details_screen.dart';
+import 'appTheme.dart';
 
 class App extends StatelessWidget {
   // This widget is the root of your application.
@@ -15,10 +16,6 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Wasteagram',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
       home: MyHomePage(title: 'Wasteagram'),
     );
   }
@@ -65,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       routes: routes,
       title: 'Wasteagram',
+      theme: ThemeData.dark(),
       home: ListScreen(),
       // body: Center(
       //     child: Column(children: [
