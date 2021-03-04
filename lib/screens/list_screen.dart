@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_storage/firebase_storage.dart'; // storing files in bucket and get url back
 import 'package:image_picker/image_picker.dart';
 
 import '../models/post.dart';
@@ -12,39 +14,49 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-//   Future<List<Post>> getAllPosts() async {
-//     Stream<QuerySnapshot> qShot = FirebaseFirestore.instance.collection('posts').snapshots();
 
-//     return qShot.map( (doc) => 
-//       Post(
-//         imgUrl: doc.data['imgUrl'],
-//         lat: doc.data['lat'],
-//         long: doc.data['long'],
-//         timeStamp: doc.data['timeStamp'],
-//         numWasted: doc.data['numWasted']
-//       )
-//     ).toList();
-//   }
+  File image;
+  final picker = ImagePicker();
 
-  // Stream<QuerySnapshot> posts =
-  //     FirebaseFirestore.instance.collection('posts').snapshots();
-  void goToDetailsScreen(context, id) {
-    // print("inside of go to details screen for id: " + id.toString());
-    Navigator.pushNamed(context, 'detailsScreen',
-        arguments: Post(
-            imgUrl: "imgUrl test",
-            lat: 0,
-            long: 0,
-            numWasted: 0,
-            timeStamp: "test"));
-  }
+  Future getImage() async {
+    print("inside of get image");
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    image = File(pickedFile.path);
 
-  void addPhoto() {
-    print("add photo pressed!");
-    FirebaseFirestore.instance.collection('posts').add({
-      'imgUrl': 'Img URL from addPhoto',
-      'numWasted': 10
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+      } else {
+        print('No image selected');
+      }
     });
+
+    Reference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('example.jpg'); // Path.basename(image.path) as alt
+
+    UploadTask uploadTask = storageReference.putFile(image);
+
+    final url = await (await uploadTask).ref.getDownloadURL();
+
+    print(url); // stick this in the posts collection as imgUrl
+
+    FirebaseFirestore.instance.collection('posts').add({
+      'imgUrl': url,
+      'numWasted': 22
+    });
+  }
+  void goToDetailsScreen(context, id) {
+    print("inside of go to details screen for id: " + id.toString());
+    Navigator.pushNamed(context, 'detailsScreen',
+      arguments: Post(
+        imgUrl: "imgUrl test",
+        lat: 0,
+        long: 0,
+        numWasted: 0,
+        timeStamp: "test"
+      )
+    );
   }
 
   @override
@@ -64,7 +76,7 @@ class _ListScreenState extends State<ListScreen> {
                   return ListTile(
                     leading: Text(post['imgUrl']),
                     title: Text(post['numWasted'].toString()),
-                    onTap: () => goToDetailsScreen(context, index - 1)
+                    onTap: () => goToDetailsScreen(context, index - 1) // might be an issuew tih this
                   );
                 },
               );
@@ -73,7 +85,7 @@ class _ListScreenState extends State<ListScreen> {
             }
           }),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => addPhoto(),
+        onPressed: () => getImage(),
         tooltip: 'Add New Image',
         child: Icon(Icons.add_a_photo),
       ),
