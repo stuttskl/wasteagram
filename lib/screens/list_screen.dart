@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart'; // storing files in buc
 import 'package:image_picker/image_picker.dart';
 
 import '../models/post.dart';
+import '../models/posts.dart';
 
 class ListScreen extends StatefulWidget {
   @override
@@ -14,7 +15,8 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-
+  // Stream<QuerySnapshot> posts =
+  //     FirebaseFirestore.instance.collection('posts').snapshots();
   File image;
   final picker = ImagePicker();
 
@@ -32,9 +34,9 @@ class _ListScreenState extends State<ListScreen> {
     });
     print("after set state");
 
-    Reference storageReference = FirebaseStorage.instance
-        .ref()
-        .child(DateTime.now().toIso8601String()); // saving the image file name as a date time string to ensure uniqueness
+    Reference storageReference = FirebaseStorage.instance.ref().child(DateTime
+            .now()
+        .toIso8601String()); // saving the image file name as a date time string to ensure uniqueness
 
     UploadTask uploadTask = storageReference.putFile(image);
 
@@ -50,45 +52,57 @@ class _ListScreenState extends State<ListScreen> {
   }
 
   // this needs work. id is off by 1
-  void goToDetailsScreen(context, id) {
-    print("inside of go to details screen for id: " + id.toString());
-    Navigator.pushNamed(context, 'detailsScreen',
-      arguments: Post(
-        imgUrl: "imgUrl test",
-        lat: 0,
-        long: 0,
-        numWasted: 0,
-        timeStamp: DateTime.now().toIso8601String()
-      )
-    );
-  }
+  // void goToDetailsScreen(context, destination, id) {
+  //   print("inside of go to details screen for id: " + id.toString());
+  //   Navigator.pushNamed(context, 'detailsScreen',
+  //       arguments: Post(
+  //           id: posts.getPost(id).id,
+  //           imgUrl: 
+  //           lat: 0,
+  //           long: 0,
+  //           numWasted: 0,
+  //           timeStamp: DateTime.now().toIso8601String()));
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('wasteagram - # of wasted items')),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
-        builder: (context, record) {
-          if (record.hasData &&
-              record.data.docs != null &&
-              record.data.docs.length > 0) {
-            return ListView.builder(
-              itemCount: record.data.docs.length,
-              itemBuilder: (context, index) {
-                var post = record.data.docs[index];
-                return ListTile(
-                  leading: Text(DateFormat('yMMMMEEEEd').format(DateTime.parse(post['timeStamp'].toString()))),
-                  trailing: Text(post['numWasted'].toString()),
-                  onTap: () => goToDetailsScreen(context, index - 1) // might be an issuew tih this
-                );
-              },
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        }
-      ),
+          stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+          builder: (context, record) {
+            if (record.hasData &&
+                record.data.docs != null &&
+                record.data.docs.length > 0) {
+              return ListView.builder(
+                itemCount: record.data.docs.length,
+                itemBuilder: (context, index) {
+                  var post = record.data.docs[index];
+                  return ListTile(
+                      leading: Text(DateFormat('yMMMMEEEEd').format(
+                          DateTime.parse(post['timeStamp'].toString()))),
+                      trailing: Text(post['numWasted'].toString()),
+                      onTap: () => {
+                        Navigator.pushNamed(context, 'detailsScreen',
+                          arguments: Post(
+                              // id: post['id'],
+                              imgUrl: post.data()['imgUrl'],
+                              lat: post.data()['lat'],
+                              long: post.data()['long'],
+                              numWasted: post.data()['numWasted'],
+                              timeStamp: post.data()['timeStamp']
+                            )
+                          )
+                        }
+                      // onTap: () => goToDetailsScreen(context, 'detailsScreen',
+                          // index - 1) // might be an issuew tih this
+                      );
+                },
+              );
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () => getImage(),
         tooltip: 'Add New Image',
