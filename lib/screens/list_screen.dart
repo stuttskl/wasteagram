@@ -10,7 +10,7 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
   void goToDetailsScreen(context, id) {
-    print("inside of go to details screen for id: " + id.toString());
+    // print("inside of go to details screen for id: " + id.toString());
     Navigator.pushNamed(context, 'detailsScreen', arguments:
       Post(
         imgUrl: "https://www.theflavorbender.com/wp-content/uploads/2014/09/Simpsons-Doughnuts-4238-Copy-1.jpg",
@@ -20,21 +20,32 @@ class _ListScreenState extends State<ListScreen> {
         timeStamp: "test"
       )
     );
-
   }
+
+  void addPhoto() {
+    print("add photo pressed!");
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: AppBar(title: Text('hi')),
-    body: ListView.builder(
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text('Wednesday, March 3rd 2021'), // date of post
-          trailing: Text(1.toString()), // number of items wasted
-          onTap:  () => goToDetailsScreen(context, index -1) // might have to -1 from this idk yet
-        );
-      },
-    )
+      body: ListView.builder(
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text('Wednesday, March 3rd 2021'), // date of post
+            trailing: Text(1.toString()), // number of items wasted
+            onTap:  () => goToDetailsScreen(context, index -1) // might have to -1 from this idk yet
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => addPhoto(),
+        tooltip: 'Add New Image',
+        child: Icon(Icons.add_a_photo),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
     // add photo FAB here
   }
