@@ -18,13 +18,13 @@ class DetailsScreen extends StatelessWidget {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(DateFormat('yMMMMEEEEd').format(DateTime.parse(args.timeStamp.toString()))),
+            Text(DateFormat('yMMMMEEEEd').format(DateTime.parse(args.timeStamp.toString())), style: Theme.of(context).textTheme.headline5,),
             FadeInImage.memoryNetwork(
               placeholder: kTransparentImage,
               image: args.imgUrl,
             ),
-            Text('Number of Wasted Items: ' + args.numWasted.toString()),
-            Text('Lat, Long: ' + args.lat.toString() + ', ' + args.long.toString())
+            Text('Number of Wasted Items: ' + args.numWasted.toString(), style: Theme.of(context).textTheme.headline3),
+            Text('Lat, Long: ' + args.lat.toString() + ', ' + args.long.toString(), style: Theme.of(context).textTheme.bodyText2)
           ],
         )));
   }
