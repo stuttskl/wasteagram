@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:transparent_image/transparent_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // storing files in bucket and get url back
 import 'package:image_picker/image_picker.dart';
 import 'package:wasteagram/screens/new_post_screen.dart';
+
+import '../db/new_post_dto.dart';
 
 class NewPostScreen extends StatefulWidget {
   static const routeName = 'newPostScreen';
@@ -19,11 +20,16 @@ class NewPostScreen extends StatefulWidget {
 
 class _NewPostScreenState extends State<NewPostScreen> {
   final _formKey = GlobalKey<FormState>();
+  final newPostValues = NewPostDTO();
 
   @override
   void initState() {
     super.initState();
     getImage();
+  }
+
+  void addDateToNewPostValues() {
+    newPostValues.timeStamp = DateTime.now().toIso8601String();
   }
 
   Future<String> getImage() async {
@@ -50,14 +56,16 @@ class _NewPostScreenState extends State<NewPostScreen> {
     final url = await (await uploadTask).ref.getDownloadURL();
 
     print(url); // stick this in the posts collection as imgUrl
+    newPostValues.imgUrl = url;
 
     FirebaseFirestore.instance.collection('posts').add({
-      'imgUrl': url,
-      'numWasted': 22,
-      'timeStamp': DateTime.now().toIso8601String()
+      'imgUrl': newPostValues.imgUrl,
+      'numWasted': newPostValues.numWasted,
+      'timeStamp': newPostValues.timeStamp
     });
 
     print("added!");
+    print(newPostValues.numWasted);
     return url;
   }
 
@@ -71,15 +79,20 @@ class _NewPostScreenState extends State<NewPostScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextFormField(
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                ),
+                    autofocus: true,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    onSaved: (value) {
+                      newPostValues.numWasted = int.parse(value);
+                      print(value);
+                    }),
               ],
             )),
         bottomNavigationBar: Padding(
             padding: EdgeInsets.all(0.0),
             child: GestureDetector(
               onTap: () {
+                addDateToNewPostValues();
                 print("upload pressed");
               },
               child: Container(

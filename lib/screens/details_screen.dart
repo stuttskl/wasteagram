@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'dart:io';
 import 'package:intl/intl.dart';
 
 
@@ -18,12 +17,12 @@ class DetailsScreen extends StatelessWidget {
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(DateFormat('yMMMMEEEEd').format(DateTime.parse(args.timeStamp.toString())), style: Theme.of(context).textTheme.headline5,),
+            Text(DateFormat('yMMMMEEEEd').format(DateTime.parse(args.timeStamp.toString())), style: Theme.of(context).textTheme.headline4,),
             FadeInImage.memoryNetwork(
               placeholder: kTransparentImage,
               image: args.imgUrl,
             ),
-            Text('Number of Wasted Items: ' + args.numWasted.toString(), style: Theme.of(context).textTheme.headline3),
+            Text('Number of Wasted Items: ' + args.numWasted.toString(), style: Theme.of(context).textTheme.headline5),
             Text('Lat, Long: ' + args.lat.toString() + ', ' + args.long.toString(), style: Theme.of(context).textTheme.bodyText2)
           ],
         )));
