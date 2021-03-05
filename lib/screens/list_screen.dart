@@ -2,7 +2,11 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart'; // storing files in bucket and get url back
+import 'package:image_picker/image_picker.dart';
+import 'package:wasteagram/screens/new_post_screen.dart';
 
 import '../models/post.dart';
 
@@ -14,10 +18,22 @@ class ListScreen extends StatefulWidget {
 
 class _ListScreenState extends State<ListScreen> {
 
+    // void goToDetailsScreen(context, destination, id) {
+    // Navigator.pushNamed(context, 'detailsScreen',
+    //   arguments: Post(
+    //       id: context['id'],
+    //       imgUrl: context['imgUrl'],
+    //       lat: context['lat'],
+    //       long: context['long'],
+    //       numWasted: context['numWasted'],
+    //       timeStamp: context['timeStamp'])
+    // );
+    // }
+
+
   Stream<QuerySnapshot> posts =
       FirebaseFirestore.instance.collection('posts').snapshots();
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,20 +52,16 @@ class _ListScreenState extends State<ListScreen> {
                   return ListTile(
                       leading: Text(DateFormat('yMMMMEEEEd').format(
                           DateTime.parse(post['timeStamp'].toString()))),
-                      trailing: Text(post['numWasted'].toString()),
-                      onTap: () => {
-                            Navigator.pushNamed(context, 'detailsScreen',
-                                arguments: Post(
-                                    // id: post['id'],
-                                    imgUrl: post.data()['imgUrl'],
-                                    lat: post.data()['lat'],
-                                    long: post.data()['long'],
-                                    numWasted: post.data()['numWasted'],
-                                    timeStamp: post.data()['timeStamp']))
-                          }
-                      // onTap: () => goToDetailsScreen(context, 'detailsScreen',
-                      // index - 1) // might be an issuew tih this
-                      );
+                      subtitle: Text(post['numWasted'].toString()),
+                      // trailing: Text(post['numWasted'].toString()),
+                      trailing: Icon(Icons.delete), onTap: () async => {
+                        print("inside of delete?"),
+                        await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
+                          myTransaction.delete(record.data.docs[index].reference);
+                        })
+                      },
+                      // onTap: () => goToDetailsScreen(context, 'detailsScreen',index - 1) // might be an issuew tih this
+                  );
                 },
               );
             } else {

@@ -58,15 +58,35 @@ class _NewPostScreenState extends State<NewPostScreen> {
     print(url); // stick this in the posts collection as imgUrl
     newPostValues.imgUrl = url;
 
-    FirebaseFirestore.instance.collection('posts').add({
-      'imgUrl': newPostValues.imgUrl,
-      'numWasted': newPostValues.numWasted,
-      'timeStamp': newPostValues.timeStamp
-    });
-
-    print("added!");
-    print(newPostValues.numWasted);
+    // FirebaseFirestore.instance.collection('posts').add({
+    //   'imgUrl': newPostValues.imgUrl,
+    //   'numWasted': newPostValues.numWasted,
+    //   'timeStamp': newPostValues.timeStamp
+    // });
     return url;
+  }
+
+  void saveEntry(BuildContext context) {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      addDateToNewPostValues();
+
+      FirebaseFirestore.instance.collection('posts').add({
+        'imgUrl': newPostValues.imgUrl,
+        'numWasted': newPostValues.numWasted,
+        'timeStamp': newPostValues.timeStamp
+      });
+
+
+      print("added!");
+      print("newPostValues.numWasted: ");
+      print(newPostValues.numWasted);
+
+      Navigator.of(context).pop();
+    } else {
+      print("invalid, not saving");
+    }
   }
 
   @override
@@ -83,8 +103,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onSaved: (value) {
-                      newPostValues.numWasted = int.parse(value);
-                      print(value);
+                      newPostValues.numWasted = int.tryParse(value);
+                      print('value: ' + value);
                     }),
               ],
             )),
@@ -92,8 +112,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
             padding: EdgeInsets.all(0.0),
             child: GestureDetector(
               onTap: () {
-                addDateToNewPostValues();
                 print("upload pressed");
+                saveEntry(context);
               },
               child: Container(
                 alignment: Alignment.bottomCenter,
