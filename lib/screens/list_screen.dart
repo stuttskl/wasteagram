@@ -49,19 +49,32 @@ class _ListScreenState extends State<ListScreen> {
                 itemCount: record.data.docs.length,
                 itemBuilder: (context, index) {
                   var post = record.data.docs[index];
+                  print(post);
                   return ListTile(
                       leading: Text(DateFormat('yMMMMEEEEd').format(
                           DateTime.parse(post['timeStamp'].toString()))),
                       subtitle: Text(post['numWasted'].toString()),
+                      onTap: () => {
+                        Navigator.pushNamed(context, 'detailsScreen', arguments: 
+                        Post(
+                          imgUrl: post.get('imgUrl'),
+                          numWasted: post.get('numWasted'),
+                          lat: post.get('lat'),
+                          long: post.get('long'),
+                          timeStamp: post.get('timeStamp')
+                        ))
+                      },
                       // trailing: Text(post['numWasted'].toString()),
-                      trailing: Icon(Icons.delete), onTap: () async => {
+                      trailing: ElevatedButton(
+                        child: Icon(Icons.delete), 
+                        onPressed: () async => {
                         print("inside of delete?"),
                         await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
                           myTransaction.delete(record.data.docs[index].reference);
                         })
                       },
                       // onTap: () => goToDetailsScreen(context, 'detailsScreen',index - 1) // might be an issuew tih this
-                  );
+                  ));
                 },
               );
             } else {

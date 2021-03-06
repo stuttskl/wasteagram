@@ -9,8 +9,7 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Post args = ModalRoute.of(context).settings.arguments;
-    print("in details_screen, args.imgUrl is: ");
-    print(args.imgUrl);
+    // print(args.imgUrl);
 
     return Scaffold(
         appBar: AppBar(title: Text('wasteagram')),
@@ -27,7 +26,7 @@ class DetailsScreen extends StatelessWidget {
               placeholder: kTransparentImage,
               image: args.imgUrl,
             ),
-            Text('Number of Wasted Items: ' + args.numWasted.toString(),
+            Text(args.numWasted.toString() + ' items',
                 style: Theme.of(context).textTheme.headline5),
             Text(
                 'Lat, Long: ' +

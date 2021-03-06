@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -22,14 +23,48 @@ class _NewPostScreenState extends State<NewPostScreen> {
   final _formKey = GlobalKey<FormState>();
   final newPostValues = NewPostDTO();
 
+  LocationData locationData;
+  var locationService = Location();
+
   @override
   void initState() {
     super.initState();
     getImage();
+    retrieveLocation();
   }
 
   void addDateToNewPostValues() {
     newPostValues.timeStamp = DateTime.now().toIso8601String();
+  }
+
+  void retrieveLocation() async {
+    try {
+      var _serviceEnabled = await locationService.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await locationService.requestService();
+        if (!_serviceEnabled) {
+          print('Failed to enable service. Returning.');
+          return;
+        }
+      }
+
+      var _permissionGranted = await locationService.hasPermission();
+      if (_permissionGranted == PermissionStatus.denied) {
+        _permissionGranted = await locationService.requestPermission();
+        if (_permissionGranted != PermissionStatus.granted) {
+          print('Location service permission not granted. Returning.');
+        }
+      }
+
+      locationData = await locationService.getLocation();
+    } on PlatformException catch (e) {
+      print('Error: ${e.toString()}, code: ${e.code}');
+      locationData = null;
+    }
+    locationData = await locationService.getLocation();
+    newPostValues.lat = locationData.latitude;
+    newPostValues.long = locationData.longitude;
+    // setState(() {});
   }
 
   Future<String> getImage() async {
@@ -58,11 +93,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
     print(url); // stick this in the posts collection as imgUrl
     newPostValues.imgUrl = url;
 
-    // FirebaseFirestore.instance.collection('posts').add({
-    //   'imgUrl': newPostValues.imgUrl,
-    //   'numWasted': newPostValues.numWasted,
-    //   'timeStamp': newPostValues.timeStamp
-    // });
     return url;
   }
 
@@ -74,14 +104,14 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
       FirebaseFirestore.instance.collection('posts').add({
         'imgUrl': newPostValues.imgUrl,
+        'lat': newPostValues.lat,
+        'long': newPostValues.long,
         'numWasted': newPostValues.numWasted,
-        'timeStamp': newPostValues.timeStamp
+        'timeStamp': newPostValues.timeStamp,
       });
 
-
       print("added!");
-      print("newPostValues.numWasted: ");
-      print(newPostValues.numWasted);
+      print(newPostValues.toMap());
 
       Navigator.of(context).pop();
     } else {

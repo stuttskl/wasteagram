@@ -1,8 +1,8 @@
 class Post {
   final int id;
   final String imgUrl;
-  final int lat;
-  final int long;
+  final double lat;
+  final double long;
   final int numWasted;
   final String timeStamp;
 
