@@ -15,20 +15,13 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  // void goToDetailsScreen(context, destination, id) {
-  // Navigator.pushNamed(context, 'detailsScreen',
-  //   arguments: Post(
-  //       id: context['id'],
-  //       imgUrl: context['imgUrl'],
-  //       lat: context['lat'],
-  //       long: context['long'],
-  //       numWasted: context['numWasted'],
-  //       timeStamp: context['timeStamp'])
-  // );
-  // }
+  // Stream<QuerySnapshot> posts =
+  //     FirebaseFirestore.instance.collection('posts').snapshots();
 
-  Stream<QuerySnapshot> posts =
-      FirebaseFirestore.instance.collection('posts').snapshots();
+  Stream<QuerySnapshot> posts = FirebaseFirestore.instance
+      .collection('posts')
+      .orderBy('timeStamp', descending: true)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +41,8 @@ class _ListScreenState extends State<ListScreen> {
                 itemCount: record.data.docs.length,
                 itemBuilder: (context, index) {
                   var post = record.data.docs[index];
-                  var date = record.data.docs[index]['timeStamp'].toDate().toString();
+                  var date =
+                      record.data.docs[index]['timeStamp'].toDate().toString();
                   print(date);
                   return ListTile(
                       leading: Text(DateFormat('yMMMMEEEEd')
@@ -62,8 +56,7 @@ class _ListScreenState extends State<ListScreen> {
                                     numWasted: post.get('numWasted'),
                                     lat: post.get('lat'),
                                     long: post.get('long'),
-                                    timeStamp: date
-                                  ))
+                                    timeStamp: date))
                           },
                       // trailing: Text(post['numWasted'].toString()),
                       trailing: ElevatedButton(
