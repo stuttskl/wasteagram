@@ -1,4 +1,3 @@
-
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,29 +9,19 @@ import 'package:wasteagram/screens/new_post_screen.dart';
 
 import '../models/post.dart';
 
-
 class ListScreen extends StatefulWidget {
   @override
   _ListScreenState createState() => _ListScreenState();
 }
 
 class _ListScreenState extends State<ListScreen> {
+  // Stream<QuerySnapshot> posts =
+  //     FirebaseFirestore.instance.collection('posts').snapshots();
 
-    // void goToDetailsScreen(context, destination, id) {
-    // Navigator.pushNamed(context, 'detailsScreen',
-    //   arguments: Post(
-    //       id: context['id'],
-    //       imgUrl: context['imgUrl'],
-    //       lat: context['lat'],
-    //       long: context['long'],
-    //       numWasted: context['numWasted'],
-    //       timeStamp: context['timeStamp'])
-    // );
-    // }
-
-
-  Stream<QuerySnapshot> posts =
-      FirebaseFirestore.instance.collection('posts').snapshots();
+  Stream<QuerySnapshot> posts = FirebaseFirestore.instance
+      .collection('posts')
+      .orderBy('timeStamp', descending: true)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -45,36 +34,43 @@ class _ListScreenState extends State<ListScreen> {
             if (record.hasData &&
                 record.data.docs != null &&
                 record.data.docs.length > 0) {
+              // DateTime d =
+              //     record.data.docs['timeStamp'].toDate(); // string rep of date
+              // print(d);
               return ListView.builder(
                 itemCount: record.data.docs.length,
                 itemBuilder: (context, index) {
                   var post = record.data.docs[index];
-                  print(post);
+                  var date =
+                      record.data.docs[index]['timeStamp'].toDate().toString();
+                  print(date);
                   return ListTile(
-                      leading: Text(DateFormat('yMMMMEEEEd').format(
-                          DateTime.parse(post['timeStamp'].toString()))),
+                      leading: Text(DateFormat('yMMMMEEEEd')
+                          .format(post['timeStamp'].toDate())
+                          .toString()),
                       subtitle: Text(post['numWasted'].toString()),
                       onTap: () => {
-                        Navigator.pushNamed(context, 'detailsScreen', arguments: 
-                        Post(
-                          imgUrl: post.get('imgUrl'),
-                          numWasted: post.get('numWasted'),
-                          lat: post.get('lat'),
-                          long: post.get('long'),
-                          timeStamp: post.get('timeStamp')
-                        ))
-                      },
+                            Navigator.pushNamed(context, 'detailsScreen',
+                                arguments: Post(
+                                    imgUrl: post.get('imgUrl'),
+                                    numWasted: post.get('numWasted'),
+                                    lat: post.get('lat'),
+                                    long: post.get('long'),
+                                    timeStamp: date))
+                          },
                       // trailing: Text(post['numWasted'].toString()),
                       trailing: ElevatedButton(
-                        child: Icon(Icons.delete), 
+                        child: Icon(Icons.delete),
                         onPressed: () async => {
-                        print("inside of delete?"),
-                        await FirebaseFirestore.instance.runTransaction((Transaction myTransaction) async {
-                          myTransaction.delete(record.data.docs[index].reference);
-                        })
-                      },
-                      // onTap: () => goToDetailsScreen(context, 'detailsScreen',index - 1) // might be an issuew tih this
-                  ));
+                          print("inside of delete?"),
+                          await FirebaseFirestore.instance.runTransaction(
+                              (Transaction myTransaction) async {
+                            myTransaction
+                                .delete(record.data.docs[index].reference);
+                          })
+                        },
+                        // onTap: () => goToDetailsScreen(context, 'detailsScreen',index - 1) // might be an issuew tih this
+                      ));
                 },
               );
             } else {

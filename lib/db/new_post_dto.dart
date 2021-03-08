@@ -3,7 +3,7 @@ class NewPostDTO {
   double lat;
   double long;
   int numWasted;
-  String timeStamp;
+  DateTime timeStamp;
 
   Map<String, dynamic> toMap() {
     return {
