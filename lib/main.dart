@@ -21,7 +21,7 @@ void main() async {
 []  Tapping on the Number of Items text input field should cause the device to display its numeric keypad.
 [x]  In the New Post screen, tapping the back button in the app bar should cause the List Screen to appear.
 [x]  In the New Post screen, tapping the large upload button should cause the List Screen to appear, with the latest post now appearing at the top of the list.
-[]  In the New Post screen, if the Number of Items field is empty, tapping the upload button should cause a sensible error message to appear.
+[x-KIND OF]  In the New Post screen, if the Number of Items field is empty, tapping the upload button should cause a sensible error message to appear.
 
 --
 
