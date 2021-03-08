@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // storing files in bucket and get url back
 import 'package:image_picker/image_picker.dart';
 import 'package:wasteagram/screens/new_post_screen.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../db/new_post_dto.dart';
 
@@ -64,23 +65,15 @@ class _NewPostScreenState extends State<NewPostScreen> {
     locationData = await locationService.getLocation();
     newPostValues.lat = locationData.latitude;
     newPostValues.long = locationData.longitude;
-    // setState(() {});
   }
 
   Future<String> getImage() async {
     File image;
+    String imageUrl;
     final picker = ImagePicker();
 
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
     image = File(pickedFile.path);
-
-    setState(() {
-      if (pickedFile != null) {
-        image = File(pickedFile.path);
-      } else {
-        print('No image selected');
-      }
-    });
 
     Reference storageReference = FirebaseStorage.instance.ref().child(DateTime
             .now()
@@ -90,10 +83,21 @@ class _NewPostScreenState extends State<NewPostScreen> {
 
     final url = await (await uploadTask).ref.getDownloadURL();
 
-    print(url); // stick this in the posts collection as imgUrl
+    // print(url); // stick this in the posts collection as imgUrl
     newPostValues.imgUrl = url;
+    imageUrl = url;
+    print('newPostValues.imgUrl');
+    print(newPostValues.imgUrl);
+    print('imageUrl:');
+    print(imageUrl);
 
-    return url;
+    setState(() {
+      if (pickedFile != null) {
+        imageUrl = pickedFile.path;
+      } else {
+        print('No image selected');
+      }
+    });
   }
 
   void saveEntry(BuildContext context) {
@@ -128,13 +132,18 @@ class _NewPostScreenState extends State<NewPostScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                newPostValues.imgUrl == null ? CircularProgressIndicator() :
+                FadeInImage.memoryNetwork(
+                  placeholder: kTransparentImage,
+                  image: newPostValues.imgUrl,
+                ),
                 TextFormField(
                     autofocus: true,
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     onSaved: (value) {
                       newPostValues.numWasted = int.tryParse(value);
-                      print('value: ' + value);
+                      // print('value: ' + value);
                     }),
               ],
             )),
@@ -142,7 +151,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
             padding: EdgeInsets.all(0.0),
             child: GestureDetector(
               onTap: () {
-                print("upload pressed");
+                // print("upload pressed");
                 saveEntry(context);
               },
               child: Container(

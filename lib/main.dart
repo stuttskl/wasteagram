@@ -10,7 +10,7 @@ void main() async {
 
 /* TODO: 
 [x]  Display a circular progress indicator when there are no previous posts to display in the List Screen.
-[]  The List Screen should display a list of all previous posts, with the most recent at the top of the list.
+[x]  The List Screen should display a list of all previous posts, with the most recent at the top of the list.
 [x]  Each post in the List Screen should be displayed as a date, representing the date the post was created, and a number, representing the total number of wasted items recorded in the post.
 [x]  Tapping on a post in the List Screen should cause a Detail Screen to appear. The Detail Screen's back button should cause the List Screen to appear.
 [x]  The Detail Screen should display the post's date, photo, number of wasted items, and the latitude and longitude that was recorded as part of the post.
