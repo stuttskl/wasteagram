@@ -17,10 +17,11 @@ class App extends StatelessWidget {
     return MaterialApp(
       routes: routes,
       title: 'wasteagram',
-      theme: ThemeData.light(),
+      theme: ThemeData.dark(),
       home: ListScreen()
     );
   }
 }
+
 
 
