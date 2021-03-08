@@ -132,18 +132,24 @@ class _NewPostScreenState extends State<NewPostScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                newPostValues.imgUrl == null ? CircularProgressIndicator() :
-                FadeInImage.memoryNetwork(
-                  placeholder: kTransparentImage,
-                  image: newPostValues.imgUrl,
-                ),
+                newPostValues.imgUrl == null
+                    ? CircularProgressIndicator()
+                    : FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: newPostValues.imgUrl,
+                      ),
                 TextFormField(
                     autofocus: true,
                     keyboardType: TextInputType.number,
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    validator: (value) {
+                      final isDigitsOnly = int.tryParse(value);
+                      return isDigitsOnly == null
+                          ? 'Please enter a quantity'
+                          : null;
+                    },
                     onSaved: (value) {
                       newPostValues.numWasted = int.tryParse(value);
-                      // print('value: ' + value);
                     }),
               ],
             )),
