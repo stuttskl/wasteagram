@@ -31,7 +31,7 @@ void main() async {
 [x]  On the List Screen, the application should display the posts stored in the Firestore database.
 [x]  On the Detail Screen, the application should display the image stored in the Cloud Storage bucket.
 [x]  On the New Post screen, tapping the large upload button should store a new post in the Firestore database.
-[]  Each "post" in Firestore should have the following attributes: date, imageURL, quantity, latitude and longitude. RENAME FIELDS
+[x]  Each "post" in Firestore should have the following attributes: date, imageURL, quantity, latitude and longitude. 
 []  The application should incorporate the Semantics widget in multiple places, such as interactive widgets like buttons, to aid accessibility.
 [x]  The codebase should incorporate a model class.
 []  The codebase should incorporate a few (two or three) simple unit tests that test the model class.

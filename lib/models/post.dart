@@ -3,8 +3,8 @@ class Post {
   final String imgUrl;
   final double lat;
   final double long;
-  final int numWasted;
+  final int quantity;
   final String timeStamp;
 
-  Post({this.id, this.imgUrl, this.lat, this.long, this.numWasted, this.timeStamp});
+  Post({this.id, this.imgUrl, this.lat, this.long, this.quantity, this.timeStamp});
 }

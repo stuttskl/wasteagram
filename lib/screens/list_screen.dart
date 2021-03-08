@@ -48,12 +48,12 @@ class _ListScreenState extends State<ListScreen> {
                       leading: Text(DateFormat('yMMMMEEEEd')
                           .format(post['timeStamp'].toDate())
                           .toString()),
-                      subtitle: Text(post['numWasted'].toString()),
+                      subtitle: Text(post['quantity'].toString()),
                       onTap: () => {
                             Navigator.pushNamed(context, 'detailsScreen',
                                 arguments: Post(
                                     imgUrl: post.get('imgUrl'),
-                                    numWasted: post.get('numWasted'),
+                                    quantity: post.get('quantity'),
                                     lat: post.get('lat'),
                                     long: post.get('long'),
                                     timeStamp: date))

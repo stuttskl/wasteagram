@@ -26,7 +26,7 @@ class DetailsScreen extends StatelessWidget {
               placeholder: kTransparentImage,
               image: args.imgUrl,
             ),
-            Text(args.numWasted.toString() + ' items',
+            Text(args.quantity.toString() + ' items',
                 style: Theme.of(context).textTheme.headline5),
             Text(
                 'Lat, Long: ' +

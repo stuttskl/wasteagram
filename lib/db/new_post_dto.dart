@@ -2,7 +2,7 @@ class NewPostDTO {
   String imgUrl;
   double lat;
   double long;
-  int numWasted;
+  int quantity;
   DateTime timeStamp;
 
   Map<String, dynamic> toMap() {
@@ -10,7 +10,7 @@ class NewPostDTO {
       'imgUrl': imgUrl,
       'lat': lat,
       'long': long,
-      'numWasted': numWasted,
+      'quantity': quantity,
       'timeStamp': timeStamp
     };
   }

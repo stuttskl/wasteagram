@@ -110,7 +110,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
         'imgUrl': newPostValues.imgUrl,
         'lat': newPostValues.lat,
         'long': newPostValues.long,
-        'numWasted': newPostValues.numWasted,
+        'quantity': newPostValues.quantity,
         'timeStamp': newPostValues.timeStamp,
       });
 
@@ -149,7 +149,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                           : null;
                     },
                     onSaved: (value) {
-                      newPostValues.numWasted = int.tryParse(value);
+                      newPostValues.quantity = int.tryParse(value);
                     }),
               ],
             )),
