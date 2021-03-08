@@ -43,7 +43,7 @@ class _ListScreenState extends State<ListScreen> {
                   var post = record.data.docs[index];
                   var date =
                       record.data.docs[index]['timeStamp'].toDate().toString();
-                  print(date);
+                  // print(date);
                   return ListTile(
                       leading: Text(DateFormat('yMMMMEEEEd')
                           .format(post['timeStamp'].toDate())
