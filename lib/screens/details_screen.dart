@@ -10,7 +10,7 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Post args = ModalRoute.of(context).settings.arguments;
     // print(args.imgUrl);
-
+ 
     return Scaffold(
         appBar: AppBar(title: Text('wasteagram')),
         body: Container(

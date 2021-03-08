@@ -34,7 +34,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
   }
 
   void addDateToNewPostValues() {
-    newPostValues.timeStamp = DateTime.now().toIso8601String();
+    newPostValues.timeStamp = DateTime.now();
   }
 
   void retrieveLocation() async {
