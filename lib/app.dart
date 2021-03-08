@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import './share_location_screen.dart';
 import './screens/list_screen.dart';
 import './screens/details_screen.dart';
 import './screens/new_post_screen.dart';

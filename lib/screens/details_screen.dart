@@ -9,17 +9,16 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Post args = ModalRoute.of(context).settings.arguments;
-    // print(args.imgUrl);
- 
+
     return Scaffold(
-        appBar: AppBar(title: Text('wasteagram')),
-        body: Container(
-            child: Column(
+      appBar: AppBar(title: Text('wasteagram')),
+      body: Container(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              DateFormat('yMMMMEEEEd')
-                  .format(DateTime.parse(args.timeStamp.toString())),
+              DateFormat('yMMMMEEEEd').format(DateTime.parse(args.timeStamp.toString())),
               style: Theme.of(context).textTheme.headline4,
             ),
             FadeInImage.memoryNetwork(
@@ -27,14 +26,15 @@ class DetailsScreen extends StatelessWidget {
               image: args.imgUrl,
             ),
             Text(args.quantity.toString() + ' items',
-                style: Theme.of(context).textTheme.headline5),
+              style: Theme.of(context).textTheme.headline5
+            ),
             Text(
-                'Lat, Long: ' +
-                    args.lat.toString() +
-                    ', ' +
-                    args.long.toString(),
-                style: Theme.of(context).textTheme.bodyText2)
-          ],
-        )));
+              'Location: (' + args.lat.toString() + ', ' + args.long.toString() + ')',
+              style: Theme.of(context).textTheme.bodyText2
+            ),
+          ]
+        )
+      )
+    );
   }
 }

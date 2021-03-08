@@ -1,8 +1,31 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'app.dart';
+import 'package:test/test.dart';
+import './models/post.dart';
 
 void main() async {
+  // test('Post created from map should have an appropriate property values', () {
+  //   final timeStamp = DateTime.parse('2020-01-01');
+  //   const imgUrl = 'FAKE';
+  //   const quantity = 1;
+  //   const lat = 1.0;
+  //   const long = 2.0;
+
+  //   final foodWastePost = Post.fromMap({
+  //     'timeStamp': timeStamp,
+  //     'imgUrl': imgUrl,
+  //     'quantity': quantity,
+  //     'lat': lat,
+  //     'long': long
+  //   });
+
+  //   expect(foodWastePost.getTimeStamp, timeStamp);
+  //   expect(foodWastePost.imgUrl, imgUrl);
+  //   expect(foodWastePost.quantity, quantity);
+    // ...
+  // });
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(App());
@@ -32,7 +55,7 @@ void main() async {
 [x]  On the Detail Screen, the application should display the image stored in the Cloud Storage bucket.
 [x]  On the New Post screen, tapping the large upload button should store a new post in the Firestore database.
 [x]  Each "post" in Firestore should have the following attributes: date, imageURL, quantity, latitude and longitude. 
-[]  The application should incorporate the Semantics widget in multiple places, such as interactive widgets like buttons, to aid accessibility.
+[x]  The application should incorporate the Semantics widget in multiple places, such as interactive widgets like buttons, to aid accessibility.
 [x]  The codebase should incorporate a model class.
 []  The codebase should incorporate a few (two or three) simple unit tests that test the model class.
 

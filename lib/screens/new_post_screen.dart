@@ -4,14 +4,14 @@ import 'package:location/location.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // storing files in bucket and get url back
-import 'package:image_picker/image_picker.dart';
-import 'package:wasteagram/screens/new_post_screen.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:wasteagram/widgets/upload_button.dart';
 
 import '../db/new_post_dto.dart';
+import '../widgets/new_post_form.dart';
+import '../widgets/upload_button.dart';
 
 class NewPostScreen extends StatefulWidget {
   static const routeName = 'newPostScreen';
@@ -82,14 +82,8 @@ class _NewPostScreenState extends State<NewPostScreen> {
     UploadTask uploadTask = storageReference.putFile(image);
 
     final url = await (await uploadTask).ref.getDownloadURL();
-
-    // print(url); // stick this in the posts collection as imgUrl
     newPostValues.imgUrl = url;
     imageUrl = url;
-    print('newPostValues.imgUrl');
-    print(newPostValues.imgUrl);
-    print('imageUrl:');
-    print(imageUrl);
 
     setState(() {
       if (pickedFile != null) {
@@ -114,9 +108,6 @@ class _NewPostScreenState extends State<NewPostScreen> {
         'timeStamp': newPostValues.timeStamp,
       });
 
-      print("added!");
-      print(newPostValues.toMap());
-
       Navigator.of(context).pop();
     } else {
       print("invalid, not saving");
@@ -126,48 +117,56 @@ class _NewPostScreenState extends State<NewPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('wasteagram - # of wasted items')),
-        body: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                newPostValues.imgUrl == null
-                    ? CircularProgressIndicator()
-                    : FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: newPostValues.imgUrl,
-                      ),
-                TextFormField(
-                    autofocus: true,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    validator: (value) {
-                      final isDigitsOnly = int.tryParse(value);
-                      return isDigitsOnly == null
-                          ? 'Please enter a quantity'
-                          : null;
-                    },
-                    onSaved: (value) {
-                      newPostValues.quantity = int.tryParse(value);
-                    }),
-              ],
-            )),
-        bottomNavigationBar: Padding(
-            padding: EdgeInsets.all(0.0),
-            child: GestureDetector(
-              onTap: () {
-                // print("upload pressed");
-                saveEntry(context);
-              },
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                width: 500,
-                height: 150,
-                color: Colors.blue,
-                child:
-                    Icon(Icons.cloud_upload, size: 150.0, color: Colors.white),
-              ),
-            )));
+      appBar: AppBar(title: Text('wasteagram - # of wasted items')),
+      // body: NewPostForm(),
+      body: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              newPostValues.imgUrl == null
+                  ? CircularProgressIndicator()
+                  : FadeInImage.memoryNetwork(
+                      placeholder: kTransparentImage,
+                      image: newPostValues.imgUrl,
+                    ),
+              TextFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Number of Wasted Items',
+                    hintStyle: Theme.of(context).textTheme.headline5,
+                  ),
+                  autofocus: true,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  validator: (value) {
+                    final isDigitsOnly = int.tryParse(value);
+                    return isDigitsOnly == null
+                        ? 'Please enter a quantity'
+                        : null;
+                  },
+                  onSaved: (value) {
+                    newPostValues.quantity = int.tryParse(value);
+                  }),
+            ],
+          )),
+      // bottomNavigationBar: UploadButton(saveEntry: saveEntry),
+      bottomNavigationBar: Semantics(
+          label: 'Upload New Post',
+          child: Padding(
+              padding: EdgeInsets.all(0.0),
+              child: GestureDetector(
+                onTap: () {
+                  // saveEntry(context);
+                },
+                child: Container(
+                  alignment: Alignment.bottomCenter,
+                  width: 500,
+                  height: 150,
+                  color: Colors.blue,
+                  child: Icon(Icons.cloud_upload,
+                      size: 150.0, color: Colors.white),
+                ),
+              )))
+    );
   }
 }
