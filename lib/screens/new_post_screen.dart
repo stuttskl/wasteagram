@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // storing files in bucket and get url back
 import 'package:transparent_image/transparent_image.dart';
 import 'package:wasteagram/widgets/upload_button.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 
 import '../db/new_post_dto.dart';
 import '../widgets/new_post_form.dart';
@@ -149,14 +150,13 @@ class _NewPostScreenState extends State<NewPostScreen> {
                   }),
             ],
           )),
-      // bottomNavigationBar: UploadButton(saveEntry: saveEntry),
       bottomNavigationBar: Semantics(
           label: 'Upload New Post',
           child: Padding(
               padding: EdgeInsets.all(0.0),
               child: GestureDetector(
                 onTap: () {
-                  // saveEntry(context);
+                  saveEntry(context);
                 },
                 child: Container(
                   alignment: Alignment.bottomCenter,
