@@ -1,8 +1,6 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../models/post.dart';
+import 'package:wasteagram/widgets/list_screen_entry.dart';
 
 class ListScreen extends StatefulWidget {
   @override
@@ -28,27 +26,12 @@ class _ListScreenState extends State<ListScreen> {
               itemBuilder: (context, index) {
                 var post = record.data.docs[index];
                 var date = record.data.docs[index]['timeStamp'].toDate().toString();
-                return ListTile(
-                  leading: Text(DateFormat('yMMMMEEEEd').format(post['timeStamp'].toDate()).toString()),
-                  onTap: () => {
-                    Navigator.pushNamed(context, 'detailsScreen', arguments: 
-                      Post(
-                        imgUrl: post.get('imgUrl'),
-                        quantity: post.get('quantity'),
-                        lat: post.get('lat'),
-                        long: post.get('long'),
-                        timeStamp: date
-                      )
-                    )
-                  },
-                  trailing: Text(post['quantity'].toString(), style: Theme.of(context).textTheme.headline5),
-                );
-              },
-            );
-            } else {
-              return Center(child: CircularProgressIndicator());
-            }
+                return ListScreenEntry(post: post, date: date);
+              });
+          } else {
+            return Center(child: CircularProgressIndicator());
           }
+        }
       ),
       floatingActionButton: Semantics(
         child: 
