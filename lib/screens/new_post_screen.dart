@@ -7,12 +7,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // storing files in bucket and get url back
 import 'package:transparent_image/transparent_image.dart';
-import 'package:wasteagram/widgets/upload_button.dart';
-import 'package:keyboard_actions/keyboard_actions.dart';
 
 import '../db/new_post_dto.dart';
-import '../widgets/new_post_form.dart';
-import '../widgets/upload_button.dart';
 
 class NewPostScreen extends StatefulWidget {
   static const routeName = 'newPostScreen';
@@ -100,6 +96,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
       _formKey.currentState.save();
 
       addDateToNewPostValues();
+      print(newPostValues.toString());
 
       FirebaseFirestore.instance.collection('posts').add({
         'imgUrl': newPostValues.imgUrl,
@@ -118,55 +115,52 @@ class _NewPostScreenState extends State<NewPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('wasteagram - # of wasted items')),
-      // body: NewPostForm(),
-      body: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              newPostValues.imgUrl == null
-                  ? CircularProgressIndicator()
-                  : FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage,
-                      image: newPostValues.imgUrl,
+        appBar: AppBar(title: Text('New Post')),
+        body: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                newPostValues.imgUrl == null
+                    ? CircularProgressIndicator()
+                    : FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        image: newPostValues.imgUrl,
+                      ),
+                TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Number of Wasted Items',
+                      hintStyle: Theme.of(context).textTheme.headline5,
                     ),
-              TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Number of Wasted Items',
-                    hintStyle: Theme.of(context).textTheme.headline5,
-                  ),
-                  autofocus: true,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (value) {
-                    final isDigitsOnly = int.tryParse(value);
-                    return isDigitsOnly == null
-                        ? 'Please enter a quantity'
-                        : null;
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    validator: (value) {
+                      final isDigitsOnly = int.tryParse(value);
+                      return isDigitsOnly == null
+                          ? 'Please enter a quantity'
+                          : null;
+                    },
+                    onSaved: (value) {
+                      newPostValues.quantity = int.tryParse(value);
+                    }),
+              ],
+            )),
+        bottomNavigationBar: Semantics(
+            label: 'Upload New Post',
+            child: Padding(
+                padding: EdgeInsets.all(0.0),
+                child: GestureDetector(
+                  onTap: () {
+                    saveEntry(context);
                   },
-                  onSaved: (value) {
-                    newPostValues.quantity = int.tryParse(value);
-                  }),
-            ],
-          )),
-      bottomNavigationBar: Semantics(
-          label: 'Upload New Post',
-          child: Padding(
-              padding: EdgeInsets.all(0.0),
-              child: GestureDetector(
-                onTap: () {
-                  saveEntry(context);
-                },
-                child: Container(
-                  alignment: Alignment.bottomCenter,
-                  width: 500,
-                  height: 150,
-                  color: Colors.blue,
-                  child: Icon(Icons.cloud_upload,
-                      size: 150.0, color: Colors.white),
-                ),
-              )))
-    );
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    width: 500,
+                    height: 150,
+                    color: Colors.blue,
+                    child: Icon(Icons.cloud_upload,
+                        size: 150.0, color: Colors.white),
+                  ),
+                ))));
   }
 }

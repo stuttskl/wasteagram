@@ -6,6 +6,8 @@ import '../models/post.dart';
 
 class DetailsScreen extends StatelessWidget {
   static const routeName = 'detailsScreen';
+
+
   @override
   Widget build(BuildContext context) {
     final Post args = ModalRoute.of(context).settings.arguments;

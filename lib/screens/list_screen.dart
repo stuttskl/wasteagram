@@ -16,32 +16,32 @@ class _ListScreenState extends State<ListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('wasteagram - # of wasted items')),
+      appBar: AppBar(title: Text('wasteagram')),
       body: StreamBuilder(
-        stream: posts,
-        builder: (context, record) {
-          if (record.hasData && record.data.docs != null && record.data.docs.length > 0) {
-            return ListView.builder(
-              itemCount: record.data.docs.length,
-              itemBuilder: (context, index) {
-                var post = record.data.docs[index];
-                var date = record.data.docs[index]['timeStamp'].toDate().toString();
-                return ListScreenEntry(post: post, date: date);
-              });
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        }
-      ),
+          stream: posts,
+          builder: (context, record) {
+            if (record.hasData &&
+                record.data.docs != null &&
+                record.data.docs.length > 0) {
+              return ListView.builder(
+                itemCount: record.data.docs.length,
+                itemBuilder: (context, index) {
+                  var post = record.data.docs[index];
+                  var date = record.data.docs[index]['timeStamp']
+                      .toDate()
+                      .toString();
+                  return ListScreenEntry(post: post, date: date);
+                });
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          }),
       floatingActionButton: Semantics(
-        child: 
-          FloatingActionButton(
-            onPressed: () => {
-              Navigator.pushNamed(context, 'newPostScreen')
-            },
-            tooltip: 'Add New Image',
-            child: Icon(Icons.add_a_photo),
-          ),
+        child: FloatingActionButton(
+          onPressed: () => {Navigator.pushNamed(context, 'newPostScreen')},
+          tooltip: 'Add New Image',
+          child: Icon(Icons.add_a_photo),
+        ),
         label: 'Add New Post',
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

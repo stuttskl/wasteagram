@@ -5,6 +5,7 @@ import './screens/details_screen.dart';
 import './screens/new_post_screen.dart';
 
 
+
 class App extends StatelessWidget {
   var routes = {
     DetailsScreen.routeName: (context) => DetailsScreen(),

@@ -14,15 +14,18 @@ class Post {
       this.quantity,
       this.timeStamp});
 
-  Map<String, dynamic> fromMap() {
-    return {
-      'timeStamp': timeStamp,
-      'quantity': quantity,
-      'lat': lat,
-      'long': long,
-      'imgUrl': imgUrl
-    };
+  Post fromMap(Map<String, dynamic> map) {
+    return Post(
+      imgUrl: map['imgUrl'],
+      lat: map['lat'],
+      long: map['long'],
+      quantity: map['quantity'],
+      timeStamp: map['time stamp']);
   }
 
+  String get getImgUrl => imgUrl;
+  int get getQuantity => quantity;
+  double get getLat => lat;
+  double get getLong => long;
   String get getTimeStamp => timeStamp;
 }

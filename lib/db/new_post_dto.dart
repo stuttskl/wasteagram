@@ -14,4 +14,8 @@ class NewPostDTO {
       'timeStamp': timeStamp
     };
   }
+
+  String toString() {
+    return '$imgUrl: imgUrl, $lat: lat, $long: long, $quantity: quantity, $timeStamp: timeStamp';
+  }
 }
